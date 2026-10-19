@@ -1,0 +1,7 @@
+node_modules/
+.auth/
+downloads/
+artifacts/
+.env
+*.log
+storage-state*.json
