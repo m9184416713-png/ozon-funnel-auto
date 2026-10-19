@@ -1,0 +1,44 @@
+name: Ozon funnel daily
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 4 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  update-funnel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      TZ: Europe/Moscow
+      SPREADSHEET_ID: 1rgLhV4XzPkazpIdcR59O53HoiMV-AJqH7MXWIdDBgW0
+      WORKSHEET_TITLE: Реклама руками (воронка)
+      OZON_STORAGE_STATE_B64: ${{ secrets.OZON_STORAGE_STATE_B64 }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Run tests
+        run: npm test
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Download, validate and update G:Y
+        run: npm start
+      - name: Save diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ozon-funnel-diagnostics-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
