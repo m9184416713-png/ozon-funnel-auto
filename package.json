@@ -1,0 +1,19 @@
+{
+  "name": "ozon-funnel-auto",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Автоматическая выгрузка дневной воронки Ozon в Google Sheets",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "playwright": "^1.49.1",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
